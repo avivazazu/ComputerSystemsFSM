@@ -32,14 +32,15 @@ Will the program give the correct output for these input files?
 - To test, run fsmOutputTest.c with the files fsmDef.txt and fsmInput.txt
 - "fsmOutputTest fsmDef.txt fsmInput.txt:
 - Check for this output:
+
     FSM has 16 transitions
-    at step 0, input a transitions from state 0 to state 1
-    at step 1, input a transitions from state 1 to state 0
-  //at step 2, input a transitions from state 0 to state 1
-  //at step 3, input a transitions from state 1 to state 0
-  //at step 4, input b transitions from state 0 to state 1
-  //at step 5, input c transitions from state 1 to state 2
-  //at step 6, input b transitions from state 2 to state 1
-  //at step 7, input c transitions from state 1 to state 2
-//after 8 steps, state machine finished successfully at state 2
+     at step 0, input a transitions from state 0 to state 1
+     at step 1, input a transitions from state 1 to state 0
+     at step 2, input a transitions from state 0 to state 1
+     at step 3, input a transitions from state 1 to state 0
+     at step 4, input b transitions from state 0 to state 1
+     at step 5, input c transitions from state 1 to state 2
+     at step 6, input b transitions from state 2 to state 1
+     at step 7, input c transitions from state 1 to state 2
+    after 8 steps, state machine finished successfully at state 2
 
