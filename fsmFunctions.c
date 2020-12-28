@@ -10,6 +10,96 @@ struct states {
         int findNext[26];
 };
 
+//This function loops through the struct array to find the next state to transition to
+int getNextState(struct states fsmDef[], int stepCounter, int currentStateIndex, char line[]) {
+        char charLower = tolower(line[0]);
+        int findNextState;
+
+         //If this is the first step, we assume that the machine has started at state 0
+        if (stepCounter == 0){
+                currentStateIndex = 0;
+                for (int i = 0; i<50; i++){
+                        //Get the next state given the current state and the input
+                        if (fsmDef[i].currentState == currentStateIndex) {
+                                findNextState = fsmDef[i].findNext[(int)charLower-97];
+                        }
+                }
+        //If this is not the first step, get the next state given the current state and the input
+        } else {
+                for (int i = 0; i<50; i++){
+                        if (fsmDef[i].currentState == currentStateIndex) {
+                                findNextState = fsmDef[i].findNext[(int)charLower-97];
+                        }
+                }
+        }
+
+        //If the proposed next state is equal to -1, then we know this is not a vald transition
+        if (findNextState == -1){
+                printf("Invalid transition. Aborting.\n");
+                exit(0);
+          }
+
+        return findNextState;
+
+}
+
+//This function will parse each line in the definition file to get the correct transitions
+void strParser(char line[], char **strTracker, char **currentStateInput, char **input, char **nextState) {
+            char delim[] = ":>";
+
+            //Begin parsing the line in the file
+            *strTracker = strtok(line, delim);
+
+            //The first split will return the current state
+            *currentStateInput = *strTracker;
+
+            int counter = 0;
+
+            while (*strTracker != NULL)
+                {
+                counter ++;
+                *strTracker = strtok(NULL, delim);
+                switch (counter) {
+                        case 1:
+                                //The second split will return the input character
+                                *input = *strTracker;
+                                break;
+                        case 2:
+                                //The third split will return the next state after transition
+                                *nextState = *strTracker;
+                                break;
+                                }
+                }
+}
+
+//This function will fill out the struct with the correct definitions, states, and transitions
+int fillOutStructs(struct states fsmDef[], int numberOfStates, int currentStateIndex,  int index, int nextStateInt) {
+           //Loop over the array of structs
+
+             int already = 0;
+            for (int i = 0; i<50; i++){
+                //If the state already exists in the definition, then add in the correct transition
+                if (fsmDef[i].currentState == currentStateIndex) {
+                        if (fsmDef[i].findNext[index] != -1) {
+                                printf("Error. Attempting to redefine previously defined state. Aborting.\n");
+                                exit(0);
+                        }
+                        fsmDef[i].findNext[index] = nextStateInt;
+                        already = 1;
+                        break;
+                }
+            }
+
+
+            if (already !=1) {
+                //If the state does not exist yet, add it into the array of structs and set the transition
+                fsmDef[numberOfStates].currentState = currentStateIndex;
+                fsmDef[numberOfStates].findNext[index] = nextStateInt;
+                //This variable will keep track of how many states have been added
+                numberOfStates +=1;
+            }
+        return numberOfStates;
+}
 
 
 //This function initializes the array of structs
