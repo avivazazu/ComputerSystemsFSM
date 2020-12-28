@@ -434,5 +434,17 @@ void testRegex(){
         return;
 }
 
+void testStrParser(){
+        char *strTrackerTest, *currentStateInputTest, *inputTest, *nextStateTest;
+        char lineTest[] = "1:a>12";
+        strParser(lineTest, &strTrackerTest, &currentStateInputTest, &inputTest, &nextStateTest);
+        if (strcmp(currentStateInputTest,"1") != 0 || strcmp(inputTest,"a") != 0 || strcmp(nextStateTest, "12") != 0) {
+                printf("strParser function failed!\n");
+                exit(0);
+        }else{
+                printf("The strParser function worked correctly!\n");
+        }
+}
+
 
 
