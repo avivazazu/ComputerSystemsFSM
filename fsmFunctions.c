@@ -170,31 +170,8 @@ int interpretFirstFile(struct states fsmDef[], char* fileName){
                 printf("Input file in incorrect format. Aborting\n");
                 exit(0);
                }
-
-            //Begin parsing the line in the file
-            strTracker = strtok(line, delim);
-
-            //The first split will return the current state
-            currentStateInput = strTracker;
-
-            counter = 0;
-
-            while (strTracker != NULL)
-                {
-                counter ++;
-                strTracker = strtok(NULL, delim);
-                switch (counter) {
-                        case 1:
-                                //The second split will return the input character
-                                input = strTracker;
-                                break;
-                        case 2:
-                                //The third split will return the next state after transition
-                                nextState = strTracker;
-                                break;
-                                }
-                }
-
+            strParser(line, &strTracker, &currentStateInput, &input, &nextState);
+          
             //Convert the values into integers to be input in to the array of structs
             currentStateIndex = atoi(currentStateInput);
             int nextStateInt = atoi(nextState);
@@ -202,32 +179,9 @@ int interpretFirstFile(struct states fsmDef[], char* fileName){
 
             //Keep track of how many possible transitions are in the fsm definition
             transitionCount++;
+		
+	    numberOfStates = fillOutStructs(fsmDef, numberOfStates, currentStateIndex, index, nextStateInt);
 
-
-            //Loop over the array of structs
-            for (int i = 0; i<50; i++){
-                //If the state already exists in the definition, then add in the correct transition
-                if (fsmDef[i].currentState == currentStateIndex) {
-			if (fsmDef[i].findNext[index] != -1) {
-				printf("Error. Attempting to redefine previously defined state. Aborting.\n");
-				exit(0);
-			}
-                        fsmDef[i].findNext[index] = nextStateInt;
-                        already = 1;
-                        break;
-                }
-            }
-
-
-            if (already !=1) {
-                //If the state does not exist yet, add it into the array of structs and set the transition
-                fsmDef[numberOfStates].currentState = currentStateIndex;
-                fsmDef[numberOfStates].findNext[index] = nextStateInt;
-                //This variable will keep track of how many states have been added
-                numberOfStates +=1;
-            }
-
-             already = 0;
 
             //Check to see if a base state of 0 was provided. If it wasn't, throw an error.
             for (int i = 0; i<50; i++){
@@ -279,32 +233,9 @@ void interpretSecondFile(struct states fsmDef[], char* fileName, int returnArray
                 printf("Input must be an alphabetic character. Aborting.\n");
                 exit(0);
          }
-
-    charLower = tolower(line[0]);
-
-         //If this is the first step, we assume that the machine has started at state 0
-        if (stepCounter == 0){
-                currentStateIndex = 0;
-                for (int i = 0; i<50; i++){
-                        //Get the next state given the current state and the input
-                        if (fsmDef[i].currentState == currentStateIndex) {
-                                findNextState = fsmDef[i].findNext[(int)charLower-97];
-                        }
-                }
-        //If this is not the first step, get the next state given the current state and the input
-        } else {
-                for (int i = 0; i<50; i++){
-                        if (fsmDef[i].currentState == currentStateIndex) {
-                                findNextState = fsmDef[i].findNext[(int)charLower-97];
-                        }
-                }
-        }
-
-        //If the proposed next state is equal to -1, then we know this is not a vald transition
-        if (findNextState == -1){
-                printf("Invalid transition. Aborting.\n");
-                exit(0);
-          }
+		
+	//This function will output the next state given the current state and the input
+        findNextState = getNextState(fsmDef, stepCounter, currentStateIndex, line);
 
         printf("  at step %d, input %c transitions from state %d to state %d\n", stepCounter, line[0], currentStateIndex, findNextState);
         stepCounter++;
