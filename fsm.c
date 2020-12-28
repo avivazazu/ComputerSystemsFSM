@@ -19,10 +19,6 @@ int main (int argc, char *argv[]) {
 	
 	//This array of structs will hold the transitions for the current states. There can be max fifty states. 
 	struct states fsmDef[50];
-	//char *currentStateInput, *input, *strTracker, *nextState;
-	//int currentStateIndex, value, ret, index, counter = 0, transitionCount = 0, numberOfStates=0, findNextState, already = 0, already2=0;
-	//char line[500];
-	//char delim[] = ":>";
 	int transitionCount = 0;
 	//Call this function to initialize all transitions to -1. This is how we will tell if a transition is invalid. 
 	initialize(fsmDef);
