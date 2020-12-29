@@ -203,9 +203,10 @@ int interpretFirstFile(struct states fsmDef[], char* fileName){
 //This function processes the second file input, the list of transition inputs, and prints out the transitions and ending state of the fsm
 void interpretSecondFile(struct states fsmDef[], char* fileName, int returnArray[]){
         FILE *fp2;
-        int ret, currentStateIndex, findNextState;
+        int ret, findNextState;
         char line[500];
         char charLower;
+	int currentStateIndex = 0;
 
         //Open the file
         fp2 = fopen(fileName, "r");
